@@ -5,6 +5,28 @@ class RenonusTUI:
     def __init__(self):
         self.term = Terminal()
 
+    def exibir_ajuda(self):
+        """Exibe uma janela de informações sobre o programa."""
+        print(self.term.clear)
+        largura = self.term.width
+        altura = self.term.height
+        
+        linhas = [
+            self.term.bold_magenta("=== SOBRE O RENOMUS ==="),
+            "",
+            "renomus é um programa para renomea lotes de videos em partes",
+            "como aulas , cortes , tomada etc .",
+            "feito por https://github.com/John-BrenoF/ sobre a licensa MIT.",
+            "",
+            self.term.gray("Pressione qualquer tecla para voltar...")
+        ]
+        
+        for i, linha in enumerate(linhas):
+            print(self.term.move_xy(0, (altura // 2) - 3 + i) + self.term.center(linha))
+        
+        self.term.inkey()
+        print(self.term.clear)
+
     def obter_configuracoes_nome(self) -> tuple[str | None, bool]:
         print(self.term.clear)
         print(self.term.bold_magenta("=== CONFIGURAÇÃO DO LOTE ==="))
@@ -60,7 +82,8 @@ class RenonusTUI:
                           f" {self.term.bold_yellow('1-9')} Forçar número" + self.term.clear_eol)
                     print(self.term.move_xy(0, linha_controles + 2) + 
                           f" {self.term.bold_green('Enter')} Aplicar Alterações | "
-                          f" {self.term.bold_red('ESC')} Abortar Operação" + self.term.clear_eol)
+                          f" {self.term.bold_red('ESC')} Abortar Operação | "
+                          f" {self.term.bold_cyan('F1')} Sobre" + self.term.clear_eol)
                     
                     status = f" Progresso: {selecionados}/{len(arquivos)} arquivos marcados para renomeação."
                     print(self.term.move_xy(0, self.term.height - 1) + self.term.bold_white_on_deepskyblue(status.ljust(self.term.width)), end="")
@@ -83,6 +106,8 @@ class RenonusTUI:
                             proxima_parte = int(val) + 1
                     elif val.name == 'KEY_ENTER':
                         break
+                    elif val.name == 'KEY_F1':
+                        self.exibir_ajuda()
                     elif val.name == 'KEY_ESCAPE':
                         return None
         return selecao
